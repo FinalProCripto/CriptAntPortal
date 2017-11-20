@@ -1,0 +1,33 @@
+def totxt (bina):
+	texto=""
+	pot=2**7
+	suma=0
+	cont=0
+	for i in bina:
+		suma=suma+(i*pot)
+		pot=pot/2
+		cont=cont+1
+		if cont==8:
+			texto=texto+chr(suma)
+			suma=0
+			cont=0
+			pot=2**7
+	return texto
+  
+  def tobin(texto):
+	a=0
+	for i in texto:
+		a=a+1
+	bina=range(8*a)
+	pos=7
+	digi=0
+	rep=0
+	for i in texto:
+		nume=ord(i)
+		for rep in range(8):
+			bina[pos-digi]=nume%2
+			nume=nume/2
+			digi=digi+1
+		digi=0
+		pos=pos+8
+	return bina
