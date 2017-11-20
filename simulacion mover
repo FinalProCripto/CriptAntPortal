@@ -1,0 +1,54 @@
+vec=range(16)
+
+
+	
+
+for i in vec:
+	vec[i]=0
+d=1
+i=-1
+clave=[d,i,d,d,i,i,d,i,d,i,d,i,d,d,i,i]
+bina=tobin("ok")
+j=0
+k=0
+for i in bina:
+	if i==1:
+		vec[k]=clave[j]
+		j=j+1
+	k=k+1
+tiempo=5
+t=0
+j=0
+print vec
+while t< tiempo:
+	j=0
+	while j<15:
+		if vec[j]==1 and vec[j+1]==-1:
+			vec[j]=-2*vec[j]
+			vec[j+1]=-2*vec[j+1]
+		elif j<14 and vec[j]==1 and vec[j+2]==-1 and vec[j+1]==0:
+			vec[j]=-2*vec[j]
+			vec[j+2]=-2*vec[j+2]		
+		j=j+1
+	print vec,"cambio"
+	j=0
+	while j<16:
+		if j+vec[j]==-1 or j+vec[j]==16:
+			vec[j]=-2*vec[j]
+		elif vec[j]==-1 and vec[j-1]==0:
+			vec[j-1]=-1
+			vec[j]=0
+		j=j+1
+	j=15
+	while j>-1:
+		if vec[j]==1 and vec[j+1]==0:
+			vec[j+1]=1
+			vec[j]=0
+		j=j-1
+	j=0
+	while j<16:
+		if abso(vec[j])!=1 and abso(vec[j])!=0:
+			vec[j]=vec[j]/(abso(vec[j]))
+		j=j+1
+	t=t+1
+	print vec,"mover"
