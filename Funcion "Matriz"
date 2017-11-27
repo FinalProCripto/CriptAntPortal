@@ -1,0 +1,25 @@
+import random
+
+def geneinstruc():
+    opc=[1,-1,1]
+    ins=[]
+    for i in range(128):
+        ins.append(random.choice(opc))
+    return ins
+
+def cord(x,y,z):
+    return matriz[(z*10000)+(y*100)+x]
+
+matriz=range(100000)
+
+for i in range(100000):
+    matriz[i]=geneinstruc()
+    
+nuevo="si"
+print "digite posicion a buscar"
+while nuevo=="si":
+    x=int(raw_input())
+    y=int(raw_input())
+    z=int(raw_input())
+    print cord(x,y,z)
+    nuevo=raw_input("desea buscar otro ? ")mp
