@@ -1,0 +1,20 @@
+def crearArchivo():
+    archivo = open('hola.txt','w')
+    archivo.close()
+
+def escribir(matriz):
+    archivo = open('proyecto.txt','w')
+    for i in range(100000):
+        for j in matriz[i]:
+            x = (str(j))
+            archivo.write(x)
+        archivo.write("\n")
+    archivo.close()
+
+def leer():
+    archivo = open('proyecto.txt','r')
+    linea = archivo.readline()
+    while linea != "":
+        print (linea)
+        linea = archivo.readline()
+    archivo.close()
