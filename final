@@ -1,0 +1,441 @@
+# -*- coding: cp1252 -*-
+
+def repcharclave(clave):
+        c = ord(clave[0])
+        print c
+        return c
+def abso(a):
+	if a<0:
+		return a*-1
+	else :
+		return a
+
+def tobin(texto):
+	a=len(texto)
+	bina=range(8*a)
+	pos=7
+	digi=0
+	rep=0
+	for i in texto:
+		nume=ord(i)
+		for rep in range(8):
+			bina[pos-digi]=nume%2
+			nume=nume/2
+			digi=digi+1
+		digi=0
+		pos=pos+8
+	return bina
+
+
+def totxt (bina):
+    print bina,"bina toxt"
+    texto=""
+    pot=2**7
+    suma=0
+    cont=0
+    for i in bina:
+        suma=suma+(i*pot)
+        pot=pot/2
+        cont=cont+1
+        if cont==8:
+            if suma<32:
+                texto=texto+"***"+str(suma)+"***"
+            elif suma==160:
+                texto=texto+"***"+str(suma)+"***"
+            else:
+                texto=texto+chr(suma)
+            suma=0
+            pot=2**7
+            cont=0
+    print bina
+    return texto
+    
+def simulacion(bina,clave,c):
+    j=0
+    vec=[]
+    #vec es la lista en la que se va a realizar la simulacion
+    # para crear vec ponemos la dirrecion que nos indique la clave en donde sea que halla 
+    #unos en el texto
+    for i in bina:
+            if i==1:
+                    if clave[j]==0:
+                            vec.append(-1)
+                    else:
+                            vec.append(1)
+            else:
+                    vec.append(0)
+            j=j+1
+            
+    tiempo=c
+    t=0
+    j=0
+    print vec
+    print bina
+    print clave
+    espacio=len(vec)
+    print "simulacion"
+    #tiempo es la cantidad de iteraciones 
+    # t se usa para realizar la cantidad de iteraciones 
+    #j se usara para recorrer vec a lo largo de esta funcion
+    # que vec[a]=0 implica que en esa posicion hay espacio vacio
+    #que vec[a]=1 o vec[a]=-1 implica que la hormiga en esa posicion mira hacia (1:der,-1:izq)
+    #que vec[a]=2 o vec[a]=-2 significa que es hormiga esta paralizada y mirando en la direccion de su signo 
+    while t<tiempo:
+        #recorremos vec de izq-der buscando choques entre hormigas
+        j=0
+        while j<espacio-1:
+            #choques entre hormigas sin distancias entre ellas 
+            if vec[j]==1 and vec[j+1]==-1:
+                vec[j]=vec[j]*-2
+                vec[j+1]=vec[j+1]*-2
+            #choques entre hormigas con espacio entre ellas 
+            elif j<espacio-2 and vec[j]==1 and vec[j+2]==-1 and vec[j+1]==0:
+                vec[j]=vec[j]*-2
+                vec[j+2]=vec[j+2]*-2
+            j=j+1
+        impribien(vec)
+        print "cambio",conthorm(vec)
+        #choques contra las paredes del principio y el final
+        if vec[0]==-1:
+            vec[0]=2
+        if vec[espacio-1]==1:
+            vec[espacio-1]=-2
+        j=0
+        #choques contra hormigas paralizadas que miren a la derecha por hormigas moviles hacia la izquierda
+        while j<espacio:
+            if vec[j]==-1 and vec[j-1]==2:
+                vec[j]=2
+            j=j+1    
+        j=espacio-1
+        #choques contra hormigas paralizadas hacia la izq por hormigas moviles hacia la der
+        while j>-1:
+            if vec[j]==1 and vec[j+1]==-2:
+                vec[j]=-2
+            j=j-1    
+        j=0
+        #de izq-der mover las que se mueven a la izq
+        while j<espacio:
+            if vec[j]==-1:
+                vec[j-1]=-1
+                vec[j]=0
+            j=j+1
+        j=espacio-1
+        # de der-izq mover las que se mueven a la derecha 
+        while j>-1:
+            if vec[j]==1:
+                vec[j+1]=1
+                vec[j]=0
+            j=j-1
+        impribien(vec)
+        print"movio",conthorm(vec)
+        j=0
+        #desinmovilizar hormigas inmovilizadas
+        while j<espacio:
+            if abs(vec[j])==2:
+                vec[j]=vec[j]/2
+            j=j+1
+        t=t+1
+    print vec
+    return vec
+
+def base3(vec):
+                   print vec,"vec"
+                   for i in range(len(vec)):
+                       if vec[i]==-1:
+                            vec[i]=2
+                   print vec,"vecalt"
+                   suma=0
+                   pot=3**7
+                   binaenvi=range(13*(len(vec)/8))
+                   j=0
+                   gru=1
+                   for i in range(len(vec)):
+                                  suma=suma+(vec[i]*pot)
+                                  pot=pot/3
+                                  if (i+1)%8==0:
+                                      print suma,"suma"
+                                      for k in range(13):
+                                          binaenvi[13*gru-k-1]=suma%2
+                                          suma=suma/2
+                                      gru=gru+1
+                                      suma=0
+                                      pot=3**7
+                                  
+                   print binaenvi
+                   return binaenvi
+                
+
+def inver(vec,clavebin):
+        print "inver"
+        print vec
+        for i in range(len(vec)):
+                if clavebin[i]==0:
+                        vec[i]=-1*vec[i]
+        
+        print clavebin
+        print vec
+        return vec
+        
+
+def padding(binaenvi):
+        print binaenvi,"sin padd"
+        agregar=8-(len(binaenvi)%8)
+        for i in range(agregar):
+                binaenvi.append(0)
+        print binaenvi,"con padd"
+        return binaenvi
+
+def mensajebin(binaenvi):
+        x=binaenvi.split("***")
+        print x
+
+
+def inttobin(n):
+    print n,"este es n"
+    sirve=False
+    j=0
+    for i in range(161):
+            j=str(j)
+            if n==j:
+                    sirve=True
+                    break
+            j=int(j)
+            j=j+1
+        
+    if sirve:
+        n=int(n)
+        bina=range(8)
+        for i in range(8):
+                bina[7-i]=n%2
+                n=n/2
+        print bina,"binaiittboin"
+        return bina
+    else:
+        bina=[]
+        return bina
+        
+        
+
+def crip(texto,clave,d):
+    c=clave
+    while len(clave)<len(texto):
+            clave=clave+c
+    txtbin=tobin(texto)
+    clavebin=tobin(clave)
+    vec=simulacion(txtbin,clavebin,d)
+    vec=inver(vec,clavebin)
+    
+    binaenvi=base3(vec)
+    binanenvi=padding(binaenvi)
+    txtenvi=totxt(binaenvi)
+    print txtenvi
+    return txtenvi
+
+        
+def inrow(menj,i):
+        for j in range(3):
+                if menj[i+j]!="*":
+                        return False
+        return True
+
+def menjtobin(menj):
+        print "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+        print "menjtobin"
+        print menj,"mensaje "
+        l=len(menj)
+        bina=[]
+        i=0
+        j=0
+        while i<l:
+                if menj[i]!="*":
+                        bina=bina+tobin(menj[i])
+                elif inrow(menj,i):
+                        sirve=True
+                        cont=0
+                        nume=""
+                        if i+3<len(menj):
+                                for j in range(4):
+                                        if menj[i+3+j]!="*":
+                                                nume=nume+menj[i+3+j]
+                                                print nume,"nume"
+                                                cont=cont+1
+                                        elif inrow(menj,i+3+j):
+                                                break
+                                        else:
+                                                sirve=False
+                                                break
+                        print nume,"numedef"
+                        if sirve:
+                                bina=bina+inttobin(nume)
+                                i=i+5+cont
+                        else:
+                                bina=bina+tobin("***"+nume)
+                                i=i+2+cont
+                else:
+                        bina=bina+tobin(menj[i])
+                print bina,"binaeje"
+                #print i," es i ",menj[i],"menj[i]"
+                i=i+1
+                
+        print bina,"bina"
+        return bina
+
+def inversabase3(bina13):
+       
+                   suma=0
+                   pot=2**12
+                   binaenvi=range(8*(len(bina13)/13))
+                   j=0
+                   gru=1
+                   for i in range(len(bina13)):
+                                  suma=suma+(bina13[i]*pot)
+                                  pot=pot/2
+                                  if (i+1)%13==0:
+                                      print suma,"suma"
+                                      for k in range(8):
+                                          binaenvi[8*gru-k-1]=suma%3
+                                          suma=suma/3
+                                      gru=gru+1
+                                      suma=0
+                                      pot=2**12
+                   for i in range(len(binaenvi)):
+                           if binaenvi[i]==2:
+                                   binaenvi[i]=-1
+                   print binaenvi,"binaenvi base 3 inversa"
+                   return binaenvi
+
+                
+
+                                  
+                
+
+
+        
+
+def quitarpadding(menj):
+        x = len(menj)%13
+        newmenj = []
+        i = 0
+        while i < len(menj)-x:
+                newmenj.append(menj[i])
+                i= i +1
+        print newmenj, "quitar padd"
+        return newmenj                
+       
+def simuinversa(vec,clave,c):
+    for i in range(len(vec)):
+            vec[i]=-1*vec[i]
+    tiempo=c
+    t=0
+    j=0
+    print vec,"vec"
+    print clave
+    espacio=len(vec)
+    print "inversa simulacion"
+    while t<tiempo:
+        j=0
+        while j<espacio-1:
+            if vec[j]==1 and vec[j+1]==-1:
+                vec[j]=vec[j]*-2
+                vec[j+1]=vec[j+1]*-2
+            elif j<espacio-2 and vec[j]==1 and vec[j+2]==-1 and vec[j+1]==0:
+                vec[j]=vec[j]*-2
+                vec[j+2]=vec[j+2]*-2
+            j=j+1
+        print vec,"cambio",conthorm(vec)
+        if vec[0]==-1:
+            vec[0]=2
+        if vec[espacio-1]==1:
+            vec[espacio-1]=-2
+        j=0
+        while j<espacio:
+            if vec[j]==-1 and vec[j-1]==2:
+                vec[j]=2
+            j=j+1    
+        j=espacio-1
+        while j>-1:
+            if vec[j]==1 and vec[j+1]==-2:
+                vec[j]=-2
+            j=j-1    
+        j=0
+        while j<espacio:
+            if vec[j]==-1:
+                vec[j-1]=-1
+                vec[j]=0
+            j=j+1
+        j=espacio-1
+        while j>-1:
+            if vec[j]==1:
+                vec[j+1]=1
+                vec[j]=0
+            j=j-1
+        print vec,"movio",conthorm(vec)
+        j=0
+        while j<espacio:
+            if abs(vec[j])==2:
+                vec[j]=vec[j]/2
+            j=j+1
+        t=t+1
+    print vec
+    return vec
+                
+
+
+def quitarsigno(vec):
+        for i in range(len(vec)):
+                if vec[i]==-1:
+                        vec[i]=vec[i]*-1
+        print vec
+        return vec
+        
+def impribien(vec):
+        for i in vec:
+                if i== -2:
+                  print "<=",
+    
+                if i== 2:
+                  print "=>",
+                  
+                if i== 1:
+                  print">>",
+                  
+                if i== -1:
+                  print "<<",
+                  break
+                if i==0:
+                  print "__",
+                  
+        print ""
+                  
+                
+                      
+                      
+def conthorm(vec):
+        j=0
+        for i in vec:
+                if i!=0:
+                        j=j+1
+        print j
+                        
+def decrip(mensaje,clave,d):
+        mensaje=menjtobin(mensaje)
+        mensaje=quitarpadding(mensaje)
+        mensaje=inversabase3(mensaje)
+        c=clave
+        while len(clave)<len(mensaje)/8:
+                clave=clave+c
+        mensaje=inver(mensaje,tobin(clave))
+        mensaje=simuinversa(mensaje,clave,d)
+        mensaje=quitarsigno(mensaje)
+        mensaje=totxt(mensaje)
+        return mensaje
+
+        
+texto=raw_input("Ingrese un mensaje\n")
+clave= raw_input("Ingresa la clave (la clave debe ser de igual o mayor tamaño que el text)\n")
+c = repcharclave(clave)
+while texto!="fin":
+   print crip(texto,clave,c)
+   print decrip(crip(texto,clave,c),clave,c)
+   texto=raw_input("Ingrese un mensaje\n")
+   clave= raw_input("Ingresa la clave (la clave debe ser de igual o mayor tamaño que el text)\n")
